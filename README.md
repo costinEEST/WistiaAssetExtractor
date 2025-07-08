@@ -1,2 +1,3 @@
-# WistiaAssetExtractor
-Extract and download video assets from Wistia
+# Credit 
+
+- [jannispaul](https://jannispaul.github.io/wisita-url-fetcher)

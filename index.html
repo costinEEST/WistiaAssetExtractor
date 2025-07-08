@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wistia Video Asset URL Extractor</title>
+    <meta name="description"
+        content="Extract and download video assets from Wistia videos with an accessible, modern interface" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">
+                    <i class="fas fa-play-circle" aria-hidden="true"></i>
+                    Wistia Asset Extractor
+                </h1>
+                <p class="subtitle">
+                    Extract video assets and download URLs from Wistia videos
+                </p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="input-section" aria-labelledby="input-heading">
+                <h2 id="input-heading" class="section-title">Video Input</h2>
+                <div class="input-group">
+                    <label for="video-input" class="input-label">
+                        Enter Wistia Video ID or URL
+                        <span class="help-text">Supports video IDs, full URLs, or embed codes</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="text" id="video-input" class="video-input"
+                            placeholder="e.g., abc123def456 or https://example.wistia.com/medias/abc123def456"
+                            aria-describedby="input-help input-error" autocomplete="off" spellcheck="false" />
+                        <button type="button" class="extract-btn" id="extract-btn" aria-describedby="extract-help">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                            <span class="btn-text">Extract Assets</span>
+                            <span class="loading-spinner" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div id="input-help" class="help-text">
+                        <i class="fas fa-info-circle" aria-hidden="true"></i>
+                        Paste a Wistia video ID, full URL, or embed code
+                    </div>
+                    <div id="input-error" class="error-message" role="alert" aria-live="polite"></div>
+                </div>
+            </section>
+
+            <section class="controls-section" aria-labelledby="controls-heading">
+                <h2 id="controls-heading" class="section-title visually-hidden">
+                    Table Controls
+                </h2>
+                <div class="controls-bar">
+                    <div class="search-wrapper">
+                        <label for="table-search" class="visually-hidden">Search assets</label>
+                        <input type="search" id="table-search" class="table-search" placeholder="Search assets..."
+                            aria-describedby="search-help" disabled />
+                        <i class="fas fa-search search-icon" aria-hidden="true"></i>
+                    </div>
+                    <div class="control-buttons">
+                        <button type="button" class="control-btn" id="select-all-btn" disabled>
+                            <i class="fas fa-check-double" aria-hidden="true"></i>
+                            Select All
+                        </button>
+                        <button type="button" class="control-btn" id="bulk-download-btn" disabled>
+                            <i class="fas fa-download" aria-hidden="true"></i>
+                            Download Selected
+                        </button>
+                        <div class="dropdown">
+                            <button type="button" class="control-btn dropdown-toggle" id="export-btn" disabled>
+                                <i class="fas fa-file-export" aria-hidden="true"></i>
+                                Export
+                                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="dropdown-menu" id="export-menu">
+                                <button type="button" class="dropdown-item" data-format="csv">
+                                    <i class="fas fa-file-csv" aria-hidden="true"></i>
+                                    Export as CSV
+                                </button>
+                                <button type="button" class="dropdown-item" data-format="json">
+                                    <i class="fas fa-file-code" aria-hidden="true"></i>
+                                    Export as JSON
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="results-section" aria-labelledby="results-heading">
+                <h2 id="results-heading" class="section-title">Video Assets</h2>
+                <div class="table-container">
+                    <div class="table-wrapper">
+                        <table class="assets-table" id="assets-table" role="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="select-col">
+                                        <input type="checkbox" id="select-all-checkbox" class="select-checkbox"
+                                            aria-label="Select all assets" />
+                                    </th>
+                                    <th scope="col" class="sortable" data-sort="name">
+                                        <button type="button" class="sort-btn">
+                                            Name
+                                            <i class="fas fa-sort sort-icon" aria-hidden="true"></i>
+                                        </button>
+                                    </th>
+                                    <th scope="col" class="sortable" data-sort="size">
+                                        <button type="button" class="sort-btn">
+                                            Size
+                                            <i class="fas fa-sort sort-icon" aria-hidden="true"></i>
+                                        </button>
+                                    </th>
+                                    <th scope="col" class="sortable" data-sort="width">
+                                        <button type="button" class="sort-btn">
+                                            Dimensions
+                                            <i class="fas fa-sort sort-icon" aria-hidden="true"></i>
+                                        </button>
+                                    </th>
+                                    <th scope="col" class="url-col">URL</th>
+                                    <th scope="col" class="actions-col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="assets-tbody">
+                                <!-- Dynamic content will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="empty-state" id="empty-state">
+                        <i class="fas fa-video empty-icon" aria-hidden="true"></i>
+                        <h3 class="empty-title">No assets loaded</h3>
+                        <p class="empty-description">
+                            Enter a Wistia video ID or URL above to extract video assets
+                        </p>
+                    </div>
+                    <div class="loading-state" id="loading-state">
+                        <div class="loading-spinner-large"></div>
+                        <p class="loading-text">Extracting video assets...</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <p class="footer-text">
+                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                    This tool extracts publicly available asset URLs from Wistia videos
+                </p>
+                <div class="footer-links">
+                    <button type="button" class="footer-link" id="help-btn">
+                        <i class="fas fa-question-circle" aria-hidden="true"></i>
+                        Help
+                    </button>
+                    <button type="button" class="footer-link" id="keyboard-shortcuts-btn">
+                        <i class="fas fa-keyboard" aria-hidden="true"></i>
+                        Shortcuts
+                    </button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Toast notifications -->
+    <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Help Modal -->
+    <div class="modal" id="help-modal" role="dialog" aria-labelledby="help-modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="help-modal-title" class="modal-title">Help & Usage Guide</h2>
+                <button type="button" class="modal-close" aria-label="Close help modal">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3>How to use this tool:</h3>
+                <ol>
+                    <li>
+                        Enter a Wistia video ID, full URL, or embed code in the input
+                        field
+                    </li>
+                    <li>Click "Extract Assets" to fetch available video assets</li>
+                    <li>Use the table to view, copy, or download individual assets</li>
+                    <li>Use bulk actions to select multiple assets for download</li>
+                    <li>Export asset information as CSV or JSON</li>
+                </ol>
+                <h3>Supported input formats:</h3>
+                <ul>
+                    <li>Video ID: <code>abc123def456</code></li>
+                    <li>
+                        Full URL:
+                        <code>https://example.wistia.com/medias/abc123def456</code>
+                    </li>
+                    <li>Embed code: Extract from iframe src or wvideo parameter</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Modal -->
+    <div class="modal" id="shortcuts-modal" role="dialog" aria-labelledby="shortcuts-modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="shortcuts-modal-title" class="modal-title">
+                    Keyboard Shortcuts
+                </h2>
+                <button type="button" class="modal-close" aria-label="Close shortcuts modal">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="shortcuts-grid">
+                    <div class="shortcut-item">
+                        <kbd>Ctrl</kbd> + <kbd>Enter</kbd>
+                        <span>Extract assets</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl</kbd> + <kbd>A</kbd>
+                        <span>Select all assets</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl</kbd> + <kbd>D</kbd>
+                        <span>Download selected</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Escape</kbd>
+                        <span>Close modals</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Tab</kbd>
+                        <span>Navigate interface</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Space</kbd>
+                        <span>Select/deselect asset</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
