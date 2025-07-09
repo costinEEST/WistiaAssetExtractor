@@ -580,17 +580,23 @@ class WistiaAssetExtractor {
         throw new Error("No assets found for this video.");
       }
 
-      return jsonData.assets.map((asset, index) => ({
-        id: `asset_${index}`,
-        display_name: asset.display_name || `Asset ${index + 1}`,
-        size: asset.size || 0,
-        width: asset.width || null,
-        height: asset.height || null,
-        url: this.processAssetUrl(asset.url, asset.ext),
-        ext: asset.ext || "mp4",
-        type: asset.type || "video",
-        ...asset,
-      }));
+      const processedAssets = jsonData.assets.map((asset, index) => {
+        console.log("Raw asset data:", asset);
+        const processedAsset = {
+          id: `asset_${index}`,
+          display_name: asset.display_name || `Asset ${index + 1}`,
+          size: asset.size || 0,
+          width: asset.width || null,
+          height: asset.height || null,
+          url: this.processAssetUrl(asset.url, asset.ext, asset.type),
+          ext: asset.ext || "mp4",
+          type: asset.type || "video",
+          ...asset,
+        };
+        console.log("Processed asset:", processedAsset);
+        return processedAsset;
+      });
+      return processedAssets;
     } catch (error) {
       if (error instanceof SyntaxError) {
         throw new Error("Invalid response format. Please check the video ID.");
@@ -599,12 +605,47 @@ class WistiaAssetExtractor {
     }
   }
 
-  processAssetUrl(url, ext) {
+  processAssetUrl(url, ext, type) {
     if (!url) return null;
 
+    // Debug logging
+    console.log("Processing asset URL:", { url, ext, type });
+
+    // Determine the correct extension based on type and ext field
+    let extension = ext || "";
+
+    // If no extension provided, determine from type
+    if (!extension) {
+      switch (type) {
+        case "original":
+          extension = "mp4";
+          break;
+        case "iphone_video":
+        case "mp4_video":
+        case "md_mp4_video":
+        case "hd_mp4_video":
+          extension = "mp4";
+          break;
+        case "still_image":
+        case "storyboard":
+          extension = "jpg";
+          break;
+        default:
+          extension = "mp4";
+      }
+    }
+
     // Replace .bin extension with proper extension
-    const extension = ext ? `.${ext}` : ".mp4";
-    return url.replace(/\.bin$/, extension);
+    const finalExtension = extension ? `.${extension}` : ".mp4";
+    const processedUrl = url.replace(/\.bin$/, finalExtension);
+
+    console.log("URL processed:", {
+      original: url,
+      processed: processedUrl,
+      extension: finalExtension,
+    });
+
+    return processedUrl;
   }
 
   extractVideoId(input) {
@@ -854,15 +895,15 @@ class WistiaAssetExtractor {
     }[type];
 
     toast.innerHTML = `
-            <i class="${iconClass} toast-icon" aria-hidden="true"></i>
-            <div class="toast-content">
-                <div class="toast-title">${title}</div>
-                <div class="toast-message">${message}</div>
-            </div>
-            <button type="button" class="toast-close" aria-label="Close notification">
-                <i class="fas fa-times" aria-hidden="true"></i>
-            </button>
-        `;
+          <i class="${iconClass} toast-icon" aria-hidden="true"></i>
+          <div class="toast-content">
+              <div class="toast-title">${title}</div>
+              <div class="toast-message">${message}</div>
+          </div>
+          <button type="button" class="toast-close" aria-label="Close notification">
+              <i class="fas fa-times" aria-hidden="true"></i>
+          </button>
+      `;
 
     container.appendChild(toast);
 
@@ -973,7 +1014,19 @@ class WistiaAssetExtractor {
 
 // Initialize the application when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
-  new WistiaAssetExtractor();
+  window.wistiaExtractor = new WistiaAssetExtractor();
+
+  // Add global test function for debugging
+  window.testUrlProcessing = function (url, ext, type) {
+    console.log("Testing URL processing with:", { url, ext, type });
+    const result = window.wistiaExtractor.processAssetUrl(url, ext, type);
+    console.log("Result:", result);
+    return result;
+  };
+
+  console.log(
+    "Wistia Extractor initialized. Use testUrlProcessing(url, ext, type) to test URL processing."
+  );
 });
 
 // Service Worker registration for offline functionality (optional)

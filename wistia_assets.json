@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Original File",
+    "size": 451309606,
+    "width": 1920,
+    "height": 1080,
+    "url": "https://embed-ssl.wistia.com/deliveries/268a208c8f33a8fdf0a2550653260300.bin",
+    "type": "original",
+    "extension": ""
+  },
+  {
+    "name": "360p",
+    "size": 150890038,
+    "width": 640,
+    "height": 360,
+    "url": "https://embed-ssl.wistia.com/deliveries/62554f688c95a540f814f58584e89419ff4cfdb4.bin",
+    "type": "iphone_video",
+    "extension": "mp4"
+  },
+  {
+    "name": "224p",
+    "size": 105059184,
+    "width": 400,
+    "height": 224,
+    "url": "https://embed-ssl.wistia.com/deliveries/b2a251b6a25153f8b35c0207d2afba7149a922f7.bin",
+    "type": "mp4_video",
+    "extension": "mp4"
+  },
+  {
+    "name": "540p",
+    "size": 218587631,
+    "width": 960,
+    "height": 540,
+    "url": "https://embed-ssl.wistia.com/deliveries/f81395a43f7890d861acacfbcf753c774d2dab89.bin",
+    "type": "md_mp4_video",
+    "extension": "mp4"
+  },
+  {
+    "name": "720p",
+    "size": 299840361,
+    "width": 1280,
+    "height": 720,
+    "url": "https://embed-ssl.wistia.com/deliveries/5b6db3bec1f9512cc2b201ffa4cbc1f1da7a72a2.bin",
+    "type": "hd_mp4_video",
+    "extension": "mp4"
+  },
+  {
+    "name": "1080p",
+    "size": 496540468,
+    "width": 1920,
+    "height": 1080,
+    "url": "https://embed-ssl.wistia.com/deliveries/5771def6fccca8608c9d786635fdeb267e2cc8dc.bin",
+    "type": "hd_mp4_video",
+    "extension": "mp4"
+  },
+  {
+    "name": "Thumbnail Image",
+    "size": 689847,
+    "width": 1920,
+    "height": 1080,
+    "url": "https://embed-ssl.wistia.com/deliveries/2a2855c09e483b66c53f71d6753cc12bf4920fc1.bin",
+    "type": "still_image",
+    "extension": "jpg"
+  },
+  {
+    "name": "Storyboard",
+    "size": 683276,
+    "width": 2000,
+    "height": 2352,
+    "url": "https://embed-ssl.wistia.com/deliveries/65ebf7fc2a20336d5932a183a7e778de656ad799.bin",
+    "type": "storyboard",
+    "extension": "jpg"
+  }
+]
