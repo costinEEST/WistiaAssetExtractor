@@ -142,15 +142,15 @@ class WistiaAssetExtractor {
 
     const selectAllBtn = document.getElementById("select-all-btn");
     selectAllBtn.innerHTML = allSelected
-      ? '<i class="fas fa-times" aria-hidden="true"></i> Deselect All'
-      : '<i class="fas fa-check-double" aria-hidden="true"></i> Select All';
+      ? '<svg class="icon" aria-hidden="true"><use href="#icon-times"></use></svg> Deselect All'
+      : '<svg class="icon" aria-hidden="true"><use href="#icon-check-double"></use></svg> Select All';
 
     const bulkDownloadBtn = document.getElementById("bulk-download-btn");
     bulkDownloadBtn.innerHTML = hasSelected
-      ? `<i class="fas fa-download" aria-hidden="true"></i> Download Selected (${
+      ? `<svg class="icon" aria-hidden="true"><use href="#icon-download"></use></svg> Download Selected (${
           this.#selectedAssets.size
         })`
-      : '<i class="fas fa-download" aria-hidden="true"></i> Download Selected';
+      : '<svg class="icon" aria-hidden="true"><use href="#icon-download"></use></svg> Download Selected';
   }
 
   #updateTable() {
@@ -231,7 +231,8 @@ class WistiaAssetExtractor {
     if (asset.url) {
       const copyBtn = Object.assign(document.createElement("button"), {
         className: "action-btn copy-btn",
-        innerHTML: '<i class="fas fa-copy" aria-hidden="true"></i>',
+        innerHTML:
+          '<svg class="icon" aria-hidden="true"><use href="#icon-copy"></use></svg>',
         ariaLabel: `Copy URL for ${asset.display_name ?? "asset"}`,
       });
       copyBtn.addEventListener("click", () =>
@@ -240,7 +241,8 @@ class WistiaAssetExtractor {
 
       const downloadBtn = Object.assign(document.createElement("a"), {
         className: "action-btn download-btn",
-        innerHTML: '<i class="fas fa-download" aria-hidden="true"></i>',
+        innerHTML:
+          '<svg class="icon" aria-hidden="true"><use href="#icon-download"></use></svg>',
         href: asset.url,
         download: asset.display_name ?? "download",
         target: "_blank",
@@ -569,11 +571,13 @@ class WistiaAssetExtractor {
         btn.closest(".sortable")?.dataset.sort === this.#sortConfig.key;
 
       btn.classList.toggle("active", isActive);
-      icon.className = isActive
-        ? `fas fa-sort-${
-            this.#sortConfig.direction === "asc" ? "up" : "down"
-          } sort-icon`
-        : "fas fa-sort sort-icon";
+      if (isActive) {
+        icon.innerHTML = `<use href="#icon-sort-${
+          this.#sortConfig.direction === "asc" ? "up" : "down"
+        }"></use>`;
+      } else {
+        icon.innerHTML = '<use href="#icon-sort"></use>';
+      }
     });
   }
 
@@ -591,7 +595,8 @@ class WistiaAssetExtractor {
       await navigator.clipboard.writeText(text);
 
       const originalContent = button.innerHTML;
-      button.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i>';
+      button.innerHTML =
+        '<svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg>';
       button.classList.add("success");
 
       setTimeout(() => {
@@ -716,21 +721,25 @@ class WistiaAssetExtractor {
   #showToast(type, title, message) {
     const container = document.getElementById("toast-container");
     const iconMap = {
-      success: "fa-check-circle",
-      error: "fa-exclamation-circle",
-      warning: "fa-exclamation-triangle",
+      success: "icon-check-circle",
+      error: "icon-exclamation-circle",
+      warning: "icon-exclamation-triangle",
     };
 
     const toast = Object.assign(document.createElement("div"), {
       className: `toast ${type}`,
       innerHTML: `
-        <i class="fas ${iconMap[type]} toast-icon" aria-hidden="true"></i>
+        <svg class="icon toast-icon" aria-hidden="true">
+          <use href="#${iconMap[type]}"></use>
+        </svg>
         <div class="toast-content">
           <div class="toast-title">${title}</div>
           <div class="toast-message">${message}</div>
         </div>
         <button type="button" class="toast-close" aria-label="Close notification">
-          <i class="fas fa-times" aria-hidden="true"></i>
+          <svg class="icon" aria-hidden="true">
+            <use href="#icon-times"></use>
+          </svg>
         </button>
       `,
     });
