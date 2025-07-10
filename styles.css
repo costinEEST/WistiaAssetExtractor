@@ -71,6 +71,18 @@
     --text-secondary: #cbd5e1;
     --text-muted: #94a3b8;
   }
+
+  .toast.success {
+    background: #064e3b;
+  }
+
+  .toast.error {
+    background: #7f1d1d;
+  }
+
+  .toast.warning {
+    background: #78350f;
+  }
 }
 
 /* Reduced motion support */
@@ -773,6 +785,8 @@ body {
   opacity: 0;
   transform: translateX(100%);
   transition: all var(--transition-normal);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .toast.show {
@@ -782,17 +796,17 @@ body {
 
 .toast.success {
   border-color: var(--success-color);
-  background: rgba(16, 185, 129, 0.1);
+  background: #ecfdf5;
 }
 
 .toast.error {
   border-color: var(--error-color);
-  background: rgba(239, 68, 68, 0.1);
+  background: #fef2f2;
 }
 
 .toast.warning {
   border-color: var(--warning-color);
-  background: rgba(245, 158, 11, 0.1);
+  background: #fffbeb;
 }
 
 .toast-icon {
