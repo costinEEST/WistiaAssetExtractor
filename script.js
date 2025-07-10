@@ -446,6 +446,7 @@ class WistiaAssetExtractor {
 
     if (allSelected) {
       // Deselect all
+
       this.filteredAssets.forEach((asset) =>
         this.selectedAssets.delete(asset.id)
       );
@@ -580,23 +581,17 @@ class WistiaAssetExtractor {
         throw new Error("No assets found for this video.");
       }
 
-      const processedAssets = jsonData.assets.map((asset, index) => {
-        console.log("Raw asset data:", asset);
-        const processedAsset = {
-          id: `asset_${index}`,
-          display_name: asset.display_name || `Asset ${index + 1}`,
-          size: asset.size || 0,
-          width: asset.width || null,
-          height: asset.height || null,
-          url: this.processAssetUrl(asset.url, asset.ext, asset.type),
-          ext: asset.ext || "mp4",
-          type: asset.type || "video",
-          ...asset,
-        };
-        console.log("Processed asset:", processedAsset);
-        return processedAsset;
-      });
-      return processedAssets;
+      return jsonData.assets.map((asset, index) => ({
+        ...asset,
+        id: `asset_${index}`,
+        display_name: asset.display_name || `Asset ${index + 1}`,
+        size: asset.size || 0,
+        width: asset.width || null,
+        height: asset.height || null,
+        url: this.processAssetUrl(asset.url, asset.ext, asset.type),
+        ext: asset.ext || "mp4",
+        type: asset.type || "video",
+      }));
     } catch (error) {
       if (error instanceof SyntaxError) {
         throw new Error("Invalid response format. Please check the video ID.");
@@ -607,9 +602,6 @@ class WistiaAssetExtractor {
 
   processAssetUrl(url, ext, type) {
     if (!url) return null;
-
-    // Debug logging
-    console.log("Processing asset URL:", { url, ext, type });
 
     // Determine the correct extension based on type and ext field
     let extension = ext || "";
@@ -637,15 +629,7 @@ class WistiaAssetExtractor {
 
     // Replace .bin extension with proper extension
     const finalExtension = extension ? `.${extension}` : ".mp4";
-    const processedUrl = url.replace(/\.bin$/, finalExtension);
-
-    console.log("URL processed:", {
-      original: url,
-      processed: processedUrl,
-      extension: finalExtension,
-    });
-
-    return processedUrl;
+    return url.replace(/\.bin$/, finalExtension);
   }
 
   extractVideoId(input) {
@@ -1015,18 +999,6 @@ class WistiaAssetExtractor {
 // Initialize the application when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
   window.wistiaExtractor = new WistiaAssetExtractor();
-
-  // Add global test function for debugging
-  window.testUrlProcessing = function (url, ext, type) {
-    console.log("Testing URL processing with:", { url, ext, type });
-    const result = window.wistiaExtractor.processAssetUrl(url, ext, type);
-    console.log("Result:", result);
-    return result;
-  };
-
-  console.log(
-    "Wistia Extractor initialized. Use testUrlProcessing(url, ext, type) to test URL processing."
-  );
 });
 
 // Service Worker registration for offline functionality (optional)
