@@ -1,0 +1,16 @@
+# robots.txt
+User-agent: *
+Disallow: /index.html
+
+# Specifically block major search engines
+User-agent: Googlebot
+Disallow: /index.html
+
+User-agent: Bingbot
+Disallow: /index.html
+
+User-agent: Slurp
+Disallow: /index.html
+
+User-agent: DuckDuckBot
+Disallow: /index.html
